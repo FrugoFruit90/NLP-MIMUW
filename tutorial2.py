@@ -32,12 +32,22 @@ def vocabulary_inclusion(source_a, source_b, morph='lemat', lower=False):
 
     intersection = morph_a.intersection(morph_b)
 
-    return int((len(intersection) / len(morph_a))*1000)/10.0
+    return round(len(intersection) / len(morph_a)*100, 1)
 
 
 N_ROWS = None
 
 print("\nZadanie 1. Pokrycie SGJP na formach i lematach NKJP1M.")
+# Jaki odsetek form i lematów z NKJP1M (oraz z listy frekwencyjnej NKJP1m) znajduje się w SGJP i vice versa.
+# Co się zmieni po sprowadzeniu form do małych liter?
+#
+# Formalnie:
+# Dla i \in {F,f,L,l} należy obliczyć wartości:
+#
+# |X_i \cap Y_i| / |X_i|,
+# |X_i \cap Y_i| / |Y_i|,
+# \sum_{s \in X_i \cap Y_i} f_i(s) / \sum_{s \in Y_i} f_i(s)
+
 print("\tUwaga - usunąłem części lematów po dwukropkach")
 
 # load sgjp dict
@@ -48,8 +58,8 @@ sgjp_dict = pd.read_csv("sgjp-20180304.tab", skiprows=29, sep='	', nrows=N_ROWS,
 nkjp_freq = pd.read_csv("1_NKJP1M-frequency.tab", sep='	', nrows=N_ROWS, engine='python', quoting=csv.QUOTE_NONE,
                         names=['forma', 'lemat', 'interpretacja', 'freq'])
 
-print("\tSłownik SGJP zawiera {} wierszy".format(sgjp_dict.shape[0]))
-print("\tTabela frekwencji NKJP zawiera {} wierszy".format(nkjp_freq.shape[0]))
+print("\tSłownik SGJP zawiera ok. {} mln wierszy".format(round(sgjp_dict.shape[0]/1000000, 2)))
+print("\tTabela frekwencji NKJP zawiera ok. {} mln wierszy".format(round(nkjp_freq.shape[0]/1000000, 2)))
 
 print("\n\tProcent słów z korpusu zawartych w słowniku:")
 print('\t\tformy - {}%'.format(vocabulary_inclusion(nkjp_freq, sgjp_dict, 'forma')))
@@ -68,13 +78,22 @@ print("\n\nZadanie 2. Niejednoznaczność lematyzacji")
 # Ile jest form w SGJP, które mają niejednoznaczną lematyzację.
 # Co się stanie, gdy utniemy części lematów, które są po ':' ?
 
-# brać unique a potem sprawdzać mnogość
+sgjp_groupby_form = sgjp_dict.groupby('forma')['lemat'].apply(list)
+number_of_lemmas_counts = sgjp_groupby_form.apply(len).value_counts()
 
-# Zadanie 3. Niejednoznaczność lematyzacji
+print('\n\tW SGJP niejednoznaczną lematyzację ma ok. {} mln słów'.
+      format(round((number_of_lemmas_counts.sum() - number_of_lemmas_counts[1])/1000000, 2)))
 
-# Jaki procent form z NKJP1M lematyzowalnych za pomocą SGJP lematyzuje się jednoznacznie? Co się zmieni po sprowadzeniu form do małych liter?
+sgjp_groupby_form_cut_lemma = sgjp_groupby_form.apply(
+    lambda lemma_list: set([remove_colon(lemma) for lemma in lemma_list]))
+number_of_cut_lemmas_counts = sgjp_groupby_form_cut_lemma.apply(len).value_counts()
 
+print("\tPo ucięciu części lematów po ':' pozostało tylko ok. {} mln słów z niejednoznacznymi lematami".
+      format(round((number_of_cut_lemmas_counts.sum() - number_of_cut_lemmas_counts[1])/1000000, 2)))
 
+print("\n\nZadanie 3. Niejednoznaczność lematyzacji")
+# Jaki procent form z NKJP1M lematyzowalnych za pomocą SGJP lematyzuje się jednoznacznie?
+# Co się zmieni po sprowadzeniu form do małych liter?
 
 # Zadania dodatkowe:
 #
