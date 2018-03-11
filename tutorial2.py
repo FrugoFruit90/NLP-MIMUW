@@ -115,6 +115,16 @@ number_of_lemmas_counts = nkjp_freq_lemma_exists['sgjp_lemma'].apply(len).value_
 print('\n\tWśród słów z korpusu NKJP jednoznaczną lematyzację w SGJP ma ok. {}% słów'.
       format(round(100*(number_of_lemmas_counts[1]/number_of_lemmas_counts.sum()), 1)))
 
+# now the same but for lower case
+nkjp_freq_unq_lower = nkjp_freq.copy()
+nkjp_freq_unq_lower['forma'].str.lower()
+nkjp_freq_unq_lower.drop_duplicates('forma')
+nkjp_freq_lower_lemma_exists = nkjp_freq_unq_lower[nkjp_freq_unq_lower['sgjp_lemma'].notnull()]
+
+number_of_lemmas_counts = nkjp_freq_lower_lemma_exists['sgjp_lemma'].apply(len).value_counts()
+print('\tWśród słów z korpusu NKJP (małe litery) jednoznaczną lematyzację w SGJP ma ok. {}% słów'.
+      format(round(100*(number_of_lemmas_counts[1]/number_of_lemmas_counts.sum()), 1)))
+
 # Zadania dodatkowe:
 #
 # 1. znalezienie za pomocą Poliqarp'a znań mających sekwencję "każdy" - "pewien".
