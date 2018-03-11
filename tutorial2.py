@@ -35,6 +35,10 @@ def vocabulary_inclusion(source_a, source_b, morph='lemat', lower=False):
     return round(len(intersection) / len(morph_a)*100, 1)
 
 
+def find_lemma_in_vocabulary(form, vocab):
+    return vocab.get(form)
+
+
 N_ROWS = None
 
 print("\nZadanie 1. Pokrycie SGJP na formach i lematach NKJP1M.")
@@ -56,7 +60,10 @@ sgjp_dict = pd.read_csv("sgjp-20180304.tab", skiprows=29, sep='	', nrows=N_ROWS,
 
 # load nkjp freq list
 nkjp_freq = pd.read_csv("1_NKJP1M-frequency.tab", sep='	', nrows=N_ROWS, engine='python', quoting=csv.QUOTE_NONE,
-                        names=['forma', 'lemat', 'interpretacja', 'freq'])
+                        names=['forma', 'lemat', 'interpretacja', 'freq'], encoding='utf-8')
+
+# pandas tries to read NaN as a numpy type, we need to explain to him that it's in fact a string ;)
+nkjp_freq['forma'] = nkjp_freq['forma'].fillna('NaN')
 
 print("\tSłownik SGJP zawiera ok. {} mln wierszy".format(round(sgjp_dict.shape[0]/1000000, 2)))
 print("\tTabela frekwencji NKJP zawiera ok. {} mln wierszy".format(round(nkjp_freq.shape[0]/1000000, 2)))
@@ -94,6 +101,19 @@ print("\tPo ucięciu części lematów po ':' pozostało tylko ok. {} mln słów
 print("\n\nZadanie 3. Niejednoznaczność lematyzacji")
 # Jaki procent form z NKJP1M lematyzowalnych za pomocą SGJP lematyzuje się jednoznacznie?
 # Co się zmieni po sprowadzeniu form do małych liter?
+
+# First drop duplicate forms
+nkjp_freq_unq = nkjp_freq.drop_duplicates('forma')
+
+# Then assign lemmas from sgjp to nkjp forms
+nkjp_freq_unq['sgjp_lemma'] = nkjp_freq_unq['forma'].apply(lambda x: sgjp_groupby_form.get(x))
+
+# Then select only those forms that we have lemmas for
+nkjp_freq_lemma_exists = nkjp_freq_unq[nkjp_freq_unq['sgjp_lemma'].notnull()]
+
+number_of_lemmas_counts = nkjp_freq_lemma_exists['sgjp_lemma'].apply(len).value_counts()
+print('\n\tWśród słów z korpusu NKJP jednoznaczną lematyzację w SGJP ma ok. {}% słów'.
+      format(round(100*(number_of_lemmas_counts[1]/number_of_lemmas_counts.sum()), 1)))
 
 # Zadania dodatkowe:
 #
