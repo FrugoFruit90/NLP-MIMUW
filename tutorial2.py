@@ -4,6 +4,14 @@ import pandas as pd
 import csv
 
 
+def remove_colon(dict_entry):
+    """
+    :param dict_entry: 
+    :return: 
+    """
+    return str(dict_entry).split(':')[0]
+
+
 def vocabulary_inclusion(source_a, source_b, morph='lemat', lower=False):
     """
     :param source_a: 
@@ -19,21 +27,19 @@ def vocabulary_inclusion(source_a, source_b, morph='lemat', lower=False):
         morph_a = morph_a.str.lower()
         morph_b = morph_b.str.lower()
 
-    morph_a = set(morph_a.unique())
-    morph_b = set(morph_b.unique())
+    morph_a = set(morph_a.apply(remove_colon).unique())
+    morph_b = set(morph_b.apply(remove_colon).unique())
 
     intersection = morph_a.intersection(morph_b)
 
-    return len(intersection) / len(morph_a)
+    return int((len(intersection) / len(morph_a))*1000)/10.0
 
 
 N_ROWS = None
 
-# Zadanie 1. Pokrycie SGJP na formach i lematach NKJP1M.
-# Uwagi:
-# 1. Używać "lower", żeby brać tylko małe litery
-# 2. TODO: nie usłyszałem ;_; O KTOŚ WIE: wywalić z lematów po dwukropkach v1 i v2
-# 3. TODO: rozróżnienie między małym a dużym M
+print("\nZadanie 1. Pokrycie SGJP na formach i lematach NKJP1M.")
+print("\tUwaga - usunąłem części lematów po dwukropkach")
+
 # load sgjp dict
 sgjp_dict = pd.read_csv("sgjp-20180304.tab", skiprows=29, sep='	', nrows=N_ROWS,
                         names=['forma', 'lemat', 'interpretacja', 'inne1', 'inne2'])
@@ -42,57 +48,22 @@ sgjp_dict = pd.read_csv("sgjp-20180304.tab", skiprows=29, sep='	', nrows=N_ROWS,
 nkjp_freq = pd.read_csv("1_NKJP1M-frequency.tab", sep='	', nrows=N_ROWS, engine='python', quoting=csv.QUOTE_NONE,
                         names=['forma', 'lemat', 'interpretacja', 'freq'])
 
-sgjp_unq_form_set = set(sgjp_dict['forma'].unique())
-sgjp_unq_lemma_set = set(sgjp_dict['lemat'].unique())
-nkjp_unq_form_set = set(nkjp_freq['forma'].unique())
-nkjp_unq_lemma_set = set(nkjp_freq['lemat'].unique())
+print("\tSłownik SGJP zawiera {} wierszy".format(sgjp_dict.shape[0]))
+print("\tTabela frekwencji NKJP zawiera {} wierszy".format(nkjp_freq.shape[0]))
 
-basic_form_intersection = sgjp_unq_form_set.intersection(nkjp_unq_form_set)
-basic_lemma_intersection = sgjp_unq_lemma_set.intersection(nkjp_unq_lemma_set)
+print("\n\tProcent słów z korpusu zawartych w słowniku:")
+print('\t\tformy - {}%'.format(vocabulary_inclusion(nkjp_freq, sgjp_dict, 'forma')))
+print('\t\tformy (małe litery) - {}%'.format(vocabulary_inclusion(nkjp_freq, sgjp_dict, 'forma', lower=True)))
+print('\t\tlematy {}%'.format(vocabulary_inclusion(nkjp_freq, sgjp_dict, 'lemat')))
+print('\t\tlematy (małe litery) - {}%'.format(vocabulary_inclusion(nkjp_freq, sgjp_dict, 'lemat', lower=True)))
 
-basic_form_corp_in_dict = len(basic_form_intersection) / len(sgjp_unq_form_set)
-basic_form_dict_in_corp = len(basic_form_intersection) / len(nkjp_unq_form_set)
+print("\n\tProcent słów ze słownika zawartych w korpusie:")
+print('\t\tformy - {}%'.format(vocabulary_inclusion(sgjp_dict, nkjp_freq, 'forma')))
+print('\t\tformy (małe litery) -  {}%'.format(vocabulary_inclusion(sgjp_dict, nkjp_freq, 'forma', lower=True)))
+print('\t\tlematy - {}%'.format(vocabulary_inclusion(sgjp_dict, nkjp_freq, 'lemat')))
+print('\t\tlematy (małe litery) - {}%'.format(vocabulary_inclusion(sgjp_dict, nkjp_freq, 'lemat', lower=True)))
 
-basic_lemma_corp_in_dict = len(basic_lemma_intersection) / len(sgjp_unq_lemma_set)
-basic_lemma_dict_in_corp = len(basic_lemma_intersection) / len(nkjp_unq_lemma_set)
-
-print('Procent form z korpusu zawartych w słowniku wynosi {}'.format(basic_form_dict_in_corp))
-print('Procent form ze słownika zawartych w korpusie wynosi {}'.format(basic_form_corp_in_dict))
-print('Procent lematów z korpusu zawartych w słowniku wynosi {}'.format(basic_lemma_dict_in_corp))
-print('Procent lematów ze słownika zawartych w korpusie wynosi {}'.format(basic_lemma_corp_in_dict))
-
-nkjp_unq_low_form_set = set(nkjp_freq['forma'].str.lower().unique())
-nkjp_unq_low_lemma_set = set(nkjp_freq['lemat'].str.lower().unique())
-sgjp_unq_low_form_set = set(sgjp_dict['forma'].str.lower().unique())
-sgjp_unq_low_lemma_set = set(sgjp_dict['lemat'].str.lower().unique())
-
-lower_form_intersection = nkjp_unq_low_form_set.intersection(sgjp_unq_low_form_set)
-lower_lemma_intersection = nkjp_unq_low_lemma_set.intersection(sgjp_unq_low_lemma_set)
-
-lower_form_dict_in_corp = len(lower_form_intersection) / len(nkjp_unq_low_form_set)
-lower_form_corp_in_dict = len(lower_form_intersection) / len(sgjp_unq_low_form_set)
-
-lower_lemma_dict_in_corp = len(lower_lemma_intersection) / len(nkjp_unq_low_lemma_set)
-lower_lemma_corp_in_dict = len(lower_lemma_intersection) / len(sgjp_unq_low_lemma_set)
-
-print('Procent form z korpusu zawartych w słowniku wynosi {}'.format(lower_form_corp_in_dict))
-print('Procent form ze słownika zawartych w korpusie wynosi {}'.format(lower_form_dict_in_corp))
-print('Procent lematów z korpusu zawartych w słowniku wynosi {}'.format(lower_lemma_corp_in_dict))
-print('Procent lematów ze słownika zawartych w korpusie wynosi {}'.format(lower_lemma_dict_in_corp))
-
-print("##############################################################")
-print("W jakim stopniu")
-print('Procent form z korpusu zawartych w słowniku wynosi {}'.format(vocabulary_inclusion(nkjp_freq, sgjp_dict, 'forma')))
-print('Procent form ze słownika zawartych w korpusie wynosi {}'.format(vocabulary_inclusion(sgjp_dict, nkjp_freq, 'forma')))
-print('Procent lematów z korpusu zawartych w słowniku wynosi {}'.format(vocabulary_inclusion(nkjp_freq, sgjp_dict, 'lemat')))
-print('Procent lematów ze słownika zawartych w korpusie wynosi {}'.format(vocabulary_inclusion(sgjp_dict, nkjp_freq, 'lemat')))
-
-print('Procent form (małe litery) z korpusu zawartych w słowniku wynosi {}'.format(vocabulary_inclusion(nkjp_freq, sgjp_dict, 'forma', lower=True)))
-print('Procent form (małe litery) ze słownika zawartych w korpusie wynosi {}'.format(vocabulary_inclusion(sgjp_dict, nkjp_freq, 'forma', lower=True)))
-print('Procent lematów (małe litery) z korpusu zawartych w słowniku wynosi {}'.format(vocabulary_inclusion(nkjp_freq, sgjp_dict, 'lemat', lower=True)))
-print('Procent lematów (małe litery) ze słownika zawartych w korpusie wynosi {}'.format(vocabulary_inclusion(sgjp_dict, nkjp_freq, 'lemat', lower=True)))
-
-# Zadanie 2. Niejednoznaczność lematyzacji
+print("\n\nZadanie 2. Niejednoznaczność lematyzacji")
 # Forma 'lub' lematyzuje się do 'lub' i 'lubić'.
 # Ile jest form w SGJP, które mają niejednoznaczną lematyzację.
 # Co się stanie, gdy utniemy części lematów, które są po ':' ?
