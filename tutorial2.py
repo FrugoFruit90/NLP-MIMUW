@@ -32,12 +32,21 @@ def vocabulary_inclusion(source_a, source_b, morph='lemat', lower=False):
 
     intersection = morph_a.intersection(morph_b)
 
-    return round(len(intersection) / len(morph_a)*100, 1)
+    return round(len(intersection) / len(morph_a) * 100, 1)
 
 
 def find_lemma_in_vocabulary(form, vocab):
     return vocab.get(form)
 
+
+def unique_lemma_in_dict(forms, lemma_dict, lower=False):
+    if lower:
+        forms = forms.str.lower()
+    forms = forms.drop_duplicates()
+    lemmas = forms.apply(find_lemma_in_vocabulary, args=(lemma_dict,))
+    lemmas = lemmas[lemmas.notnull()]
+    value_counts = lemmas.apply(len).value_counts()
+    return round(100*(value_counts[1] / value_counts.sum()), 1)
 
 N_ROWS = None
 
@@ -52,7 +61,7 @@ print("\nZadanie 1. Pokrycie SGJP na formach i lematach NKJP1M.")
 # |X_i \cap Y_i| / |Y_i|,
 # \sum_{s \in X_i \cap Y_i} f_i(s) / \sum_{s \in Y_i} f_i(s)
 
-print("\tUwaga - usunąłem części lematów po dwukropkach")
+print("\tUwaga - w tym zadaniu usunąłem części lematów po dwukropkach")
 
 # load sgjp dict
 sgjp_dict = pd.read_csv("sgjp-20180304.tab", skiprows=29, sep='	', nrows=N_ROWS,
@@ -63,10 +72,10 @@ nkjp_freq = pd.read_csv("1_NKJP1M-frequency.tab", sep='	', nrows=N_ROWS, engine=
                         names=['forma', 'lemat', 'interpretacja', 'freq'], encoding='utf-8')
 
 # pandas tries to read NaN as a numpy type, we need to explain to him that it's in fact a string ;)
-nkjp_freq['forma'] = nkjp_freq['forma'].fillna('NaN')
+nkjp_freq['forma'].fillna('NaN', inplace=True)
 
-print("\tSłownik SGJP zawiera ok. {} mln wierszy".format(round(sgjp_dict.shape[0]/1000000, 2)))
-print("\tTabela frekwencji NKJP zawiera ok. {} mln wierszy".format(round(nkjp_freq.shape[0]/1000000, 2)))
+print("\tSłownik SGJP zawiera ok. {} mln wierszy".format(round(sgjp_dict.shape[0] / 1000000, 2)))
+print("\tTabela frekwencji NKJP zawiera ok. {} mln wierszy".format(round(nkjp_freq.shape[0] / 1000000, 2)))
 
 print("\n\tProcent słów z korpusu zawartych w słowniku:")
 print('\t\tformy - {}%'.format(vocabulary_inclusion(nkjp_freq, sgjp_dict, 'forma')))
@@ -85,45 +94,30 @@ print("\n\nZadanie 2. Niejednoznaczność lematyzacji")
 # Ile jest form w SGJP, które mają niejednoznaczną lematyzację.
 # Co się stanie, gdy utniemy części lematów, które są po ':' ?
 
-sgjp_groupby_form = sgjp_dict.groupby('forma')['lemat'].apply(list)
+sgjp_groupby_form = sgjp_dict.groupby('forma')['lemat'].apply(set).apply(list)
 number_of_lemmas_counts = sgjp_groupby_form.apply(len).value_counts()
 
 print('\n\tW SGJP niejednoznaczną lematyzację ma ok. {} mln słów'.
-      format(round((number_of_lemmas_counts.sum() - number_of_lemmas_counts[1])/1000000, 2)))
+      format(round((number_of_lemmas_counts.sum() - number_of_lemmas_counts[1]) / 1000000, 2)))
 
 sgjp_groupby_form_cut_lemma = sgjp_groupby_form.apply(
     lambda lemma_list: set([remove_colon(lemma) for lemma in lemma_list]))
 number_of_cut_lemmas_counts = sgjp_groupby_form_cut_lemma.apply(len).value_counts()
 
 print("\tPo ucięciu części lematów po ':' pozostało tylko ok. {} mln słów z niejednoznacznymi lematami".
-      format(round((number_of_cut_lemmas_counts.sum() - number_of_cut_lemmas_counts[1])/1000000, 2)))
+      format(round((number_of_cut_lemmas_counts.sum() - number_of_cut_lemmas_counts[1]) / 1000000, 2)))
 
 print("\n\nZadanie 3. Niejednoznaczność lematyzacji")
 # Jaki procent form z NKJP1M lematyzowalnych za pomocą SGJP lematyzuje się jednoznacznie?
 # Co się zmieni po sprowadzeniu form do małych liter?
 
-# First drop duplicate forms
-nkjp_freq_unq = nkjp_freq.drop_duplicates('forma')
+print("\tUwaga - w tym zadaniu NIE usunąłem części lematów po dwukropkach")
 
-# Then assign lemmas from sgjp to nkjp forms
-nkjp_freq_unq['sgjp_lemma'] = nkjp_freq_unq['forma'].apply(lambda x: sgjp_groupby_form.get(x))
-
-# Then select only those forms that we have lemmas for
-nkjp_freq_lemma_exists = nkjp_freq_unq[nkjp_freq_unq['sgjp_lemma'].notnull()]
-
-number_of_lemmas_counts = nkjp_freq_lemma_exists['sgjp_lemma'].apply(len).value_counts()
 print('\n\tWśród słów z korpusu NKJP jednoznaczną lematyzację w SGJP ma ok. {}% słów'.
-      format(round(100*(number_of_lemmas_counts[1]/number_of_lemmas_counts.sum()), 1)))
+      format(unique_lemma_in_dict(nkjp_freq['forma'], sgjp_groupby_form, lower=False)))
 
-# now the same but for lower case
-nkjp_freq_unq_lower = nkjp_freq.copy()
-nkjp_freq_unq_lower['forma'].str.lower()
-nkjp_freq_unq_lower.drop_duplicates('forma')
-nkjp_freq_lower_lemma_exists = nkjp_freq_unq_lower[nkjp_freq_unq_lower['sgjp_lemma'].notnull()]
-
-number_of_lemmas_counts = nkjp_freq_lower_lemma_exists['sgjp_lemma'].apply(len).value_counts()
 print('\tWśród słów z korpusu NKJP (małe litery) jednoznaczną lematyzację w SGJP ma ok. {}% słów'.
-      format(round(100*(number_of_lemmas_counts[1]/number_of_lemmas_counts.sum()), 1)))
+      format(unique_lemma_in_dict(nkjp_freq['forma'], sgjp_groupby_form, lower=True)))
 
 # Zadania dodatkowe:
 #
