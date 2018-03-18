@@ -12,6 +12,7 @@ def remove_colon(dict_entry):
     return str(dict_entry).split(':')[0]
 
 
+# TODO: jeszcze przeskalować to przez występowanie w korpusie
 def vocabulary_inclusion(source_a, source_b, morph='lemat', lower=False):
     """
     :param source_a: 
@@ -35,6 +36,17 @@ def vocabulary_inclusion(source_a, source_b, morph='lemat', lower=False):
     return round(len(intersection) / len(morph_a) * 100, 1)
 
 
+def get_scaled_vocab_inclusion(sgjp, nkjp, morph='lemat', lower=False, scale=False):
+    if lower:
+        sgjp[morph] = sgjp[morph].str.lower()
+        nkjp[morph] = nkjp[morph].str.lower()
+    if scale:
+        nkjp = nkjp.groupby(morph)['freq'].sum()
+    nkjp['in_sgjp'] = nkjp[morph].apply(lambda x: x in sgjp[morph].unique())
+
+    return round(nkjp[nkjp["in_sgjp"] == 1]['freq'].sum() / nkjp['freq'].sum() * 100, 1)
+
+
 def find_lemma_in_vocabulary(form, vocab):
     return vocab.get(form)
 
@@ -46,9 +58,20 @@ def unique_lemma_in_dict(forms, lemma_dict, lower=False):
     lemmas = forms.apply(find_lemma_in_vocabulary, args=(lemma_dict,))
     lemmas = lemmas[lemmas.notnull()]
     value_counts = lemmas.apply(len).value_counts()
-    return round(100*(value_counts[1] / value_counts.sum()), 1)
+    return round(100 * (value_counts[1] / value_counts.sum()), 1)
+
 
 N_ROWS = None
+
+# Niech X_F, będzie zbiorem form z SGJP, X_L zbiorem lematów z SGJP,
+# a X_f i X_l zbiorem form i lematów z SGJP sprowadzonych do małych liter.
+#
+# Niech Y_F, będzie zbiorem form z NKJP1M, Y_L zbiorem lematów z NKJP1M
+# a Y_f i Y_l zbiorem form i lematów z NKJP1M sprowadzonych do małych liter.
+#
+# Niech f_F: Y_F -> N, będzie liczbą wystąpień formy w NKJP1M,
+# f_L: Y_L -> N, będzie liczbą wystąpień lematu w NKJP1M,
+# a f_f i f_l odpowiednio liczbą wystąpień form i lematów z NKJP1M sprowadzonych do małych liter.
 
 print("\nZadanie 1. Pokrycie SGJP na formach i lematach NKJP1M.")
 # Jaki odsetek form i lematów z NKJP1M (oraz z listy frekwencyjnej NKJP1m) znajduje się w SGJP i vice versa.
@@ -82,6 +105,14 @@ print('\t\tformy - {}%'.format(vocabulary_inclusion(nkjp_freq, sgjp_dict, 'forma
 print('\t\tformy (małe litery) - {}%'.format(vocabulary_inclusion(nkjp_freq, sgjp_dict, 'forma', lower=True)))
 print('\t\tlematy {}%'.format(vocabulary_inclusion(nkjp_freq, sgjp_dict, 'lemat')))
 print('\t\tlematy (małe litery) - {}%'.format(vocabulary_inclusion(nkjp_freq, sgjp_dict, 'lemat', lower=True)))
+print('\t\tformy (frekwencja) - {}%'.format(
+    get_scaled_vocab_inclusion(sgjp_dict, nkjp_freq, morph='forma', lower=False, scale=True)))
+print('\t\tformy (frekwencja, małe litery) - {}%'.format(
+    get_scaled_vocab_inclusion(sgjp_dict, nkjp_freq, morph='lemat', lower=True, scale=True)))
+print('\t\tlematy (frekwencja) - {}%'.format(
+    get_scaled_vocab_inclusion(sgjp_dict, nkjp_freq, morph='forma', lower=False, scale=True)))
+print('\t\tlematy (frekwencja, małe litery) - {}%'.format(
+    get_scaled_vocab_inclusion(sgjp_dict, nkjp_freq, morph='lemat', lower=True, scale=True)))
 
 print("\n\tProcent słów ze słownika zawartych w korpusie:")
 print('\t\tformy - {}%'.format(vocabulary_inclusion(sgjp_dict, nkjp_freq, 'forma')))
@@ -122,7 +153,9 @@ print('\tWśród słów z korpusu NKJP (małe litery) jednoznaczną lematyzację
 # Zadania dodatkowe:
 #
 # 1. znalezienie za pomocą Poliqarp'a znań mających sekwencję "każdy" - "pewien".
-#
+# Znaleziono 0 wyników
+
 # 2. oszacuj średnią długość zdania w języku polskim na podstawie NKJP1M.
 #
+
 # 3. narysuj rozkład długości zdań na podstawie NKJP1M.
