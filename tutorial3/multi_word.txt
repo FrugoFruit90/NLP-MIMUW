@@ -1,0 +1,21 @@
+forma   lemat   interpretacja_morfoskladniowa
+Cyrk Shuty  Cyrk Shuty  subst:sg:nom:m3
+Cyrk z Huty Cyrk z Huty subst:sg:nom:m3
+Liceum Ogólnokształcącym w Nowej Hucie  Liceum Ogólnokształcące w Nowej Hucie   subst:sg:loc:n1
+Akademii Ekonomicznej w Krakowie    Akademia Ekonomiczna w Krakowie subst:sg:loc:f
+Banku Zachodnim WBK Bank Zachodni WBK   subst:sg:loc:m3
+Krakowski Klub Artystyczny T.A.M.   (Twórcza Akcja Młodych) Krakowski Klub Artystyczny T.A.M. (Twórcza Akcja Młodych)   subst:sg:acc:m3
+Lampa i Iskra Boża  Lampa i Iskra Boża  subst:sg:nom:f
+Mać Pariadka    Mać Pariadka    subst:sg:nom:f
+Cyrku Shuty Cyrk Shuty  subst:sg:gen
+Bunkrze Sztuki Korporacji Ha!art    Bunkier Sztuki Korporacji Ha!art    subst:sg:loc:m3
+Grupę Artystyczną Duet  Grupa Artystyczna Duet  subst:sg:acc:f
+Cyrki z Huty    Cyrk Shuty  subst:pl:acc:m3
+Interia (www.interia.pl)    Interia (www.interia.pl)    subst:sg:nom:f
+Opowieści środka kraju  Opowieści środka kraju subst:pl:gen:f
+Studium Literacko-Artystycznym  Studium Literacko-Artystyczne subst:sg:loc:n1
+UJ w Krakowie   UJ w Krakowie   subst:sg:loc:m3
+IV Liceum Ogólnokształcącym im. E. Szczanieckiej    IV Liceum Ogólnokształcące im. E. Szczanieckiej subst:sg:loc:n1
+Komitetem Obrony Robotników (KOR)   Komitet Obrony Robotników (KOR) subst:sg:inst:m3
+Niezależną Oficyną Wydawniczą   Niezależna Oficyna Wydawnicza   subst:sg:inst:f
+Uniwersytetu Latającego Uniwersytet Latający    subst:sg:gen:m3

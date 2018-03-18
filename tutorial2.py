@@ -42,7 +42,8 @@ def get_scaled_vocab_inclusion(sgjp, nkjp, morph='lemat', lower=False, scale=Fal
         nkjp[morph] = nkjp[morph].str.lower()
     if scale:
         nkjp = nkjp.groupby(morph)['freq'].sum()
-    nkjp['in_sgjp'] = nkjp[morph].apply(lambda x: x in sgjp[morph].unique())
+        nkjp = pd.DataFrame({morph: nkjp.index, 'freq': nkjp.values})
+        nkjp['in_sgjp'] = nkjp[morph].apply(lambda x: x in sgjp[morph].unique())
 
     return round(nkjp[nkjp["in_sgjp"] == 1]['freq'].sum() / nkjp['freq'].sum() * 100, 1)
 

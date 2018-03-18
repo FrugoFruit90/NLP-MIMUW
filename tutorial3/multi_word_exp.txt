@@ -1,3 +1,0 @@
-forma   lemat   interpretacja_morfoskladniowa
-Nowej Hucie Nowa Huta   subst:sg:dat:f
-Krakowa Kraków  subst:sg:gen:
