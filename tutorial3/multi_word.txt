@@ -7,7 +7,7 @@ Banku Zachodnim WBK Bank Zachodni WBK   subst:sg:loc:m3
 Krakowski Klub Artystyczny T.A.M.   (Twórcza Akcja Młodych) Krakowski Klub Artystyczny T.A.M. (Twórcza Akcja Młodych)   subst:sg:acc:m3
 Lampa i Iskra Boża  Lampa i Iskra Boża  subst:sg:nom:f
 Mać Pariadka    Mać Pariadka    subst:sg:nom:f
-Cyrku Shuty Cyrk Shuty  subst:sg:gen
+Cyrku Shuty Cyrk Shuty  subst:sg:gen:m3
 Bunkrze Sztuki Korporacji Ha!art    Bunkier Sztuki Korporacji Ha!art    subst:sg:loc:m3
 Grupę Artystyczną Duet  Grupa Artystyczna Duet  subst:sg:acc:f
 Cyrki z Huty    Cyrk Shuty  subst:pl:acc:m3
