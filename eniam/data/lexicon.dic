@@ -16,8 +16,8 @@
   <match-result> <url> <email> <phone-number> <postal-code> <obj-id> <list-item> <fixed> <adj> <apron> <adjc> <adjp> <adja>
   <adv> <ger> <pact> <ppas> <fin> <bedzie> <praet> <winien> <impt>
   <imps> <pred> <aglt> <inf> <pcon> <pant> <qub> <comp> <compar> <conj> <interj>
-  <sinterj> <burk> <interp> <part> <unk> <building-number> do w na MIASTO ORGANIZACJA location time
-  CERTYFIKAT KIERUNEK_STUDIÓW ZAWÓD link
+  <sinterj> <burk> <interp> <part> <unk> <building-number> do w na MIASTO ORGANIZACJA OSOBA location time
+  CERTYFIKAT KIERUNEK_STUDIÓW ZAWÓD link NAZWISKO IMIĘ
 
 @WEIGHTS
 
@@ -33,8 +33,11 @@ lemma=następnie,pos=adv:       link;
 lemma=uczęszczać,pos=praet,person=ter,mood=indicative,tense=past:     ip{|time,|prepnp*ORGANIZACJA*do*gen,|location};
 lemma=uzyskać,pos=praet,person=ter,mood=indicative,tense=past:     ip{|time,|np*CERTYFIKAT*T*acc*T};
 lemma=studiować,pos=praet,person=ter,mood=indicative,tense=past:     ip{|(1+link),|np*KIERUNEK_STUDIÓW*T*acc*T,|prepnp*ORGANIZACJA*na*loc};
+
 lemma=urodzony,pos=subst,person=ter:     ip{/(1+time),/location};
-lemma=syn,pos=subst,person=ter,gender=m1: ip{/(1+OSOBA)}
+lemma=syn,pos=subst,person=ter,gender=m1: np*OSOBA*number*case*gender/np*IMIĘ*sg*gen*T/np*NAZWISKO*sg*gen*T/np*ZAWÓD*sg*gen*T;
+pos=subst,cat=IMIĘ: np*OSOBA*number*case*gender/np*ZAWÓD*number*case*gender;
+lemma=i,pos=conj:               QUANT[case=0,cat=0] np*cat*sg*case*T\np*cat*T*case*T/np*cat*T*case*T;
 
 lemma=</sentence>,pos=interp:     BRACKET s\?(ip+cp*int*T+np*sg*voc*T*T+interj);
 lemma=<sentence>,pos=interp:      BRACKET <root>/s;
