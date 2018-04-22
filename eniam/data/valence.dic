@@ -5,7 +5,7 @@
 @SELPREF_NAMES
 
 ZDARZENIE OSOBA KIERUNEK_STUDIÓW CERTYFIKAT CZAS UTWÓR
-META STAN OKRES TYTUŁ PRACA AUTOR NUMER
+META STAN OKRES TYTUŁ PRACA AUTOR NUMER, DZIELNICA, ZAWÓD
 
 @ROLE_NAMES
 
@@ -31,4 +31,8 @@ lemma=dramaturg,pos2=noun,node=concept|sit:	AUTOR: ;
 lemma=utwór,pos2=noun,node=concept|sit:	UTWÓR: ;
 lemma=numer,pos2=noun,node=concept|sit:	NUMER: ;
 lemma=następnie,pos2=adv,node=concept|sit:	META: ;
-
+lemma=urodzony,pos2=noun,node=concept|sit:	OSOBA: ;
+lemma=dzielnica,pos2=noun,node=concept|sit:  DZIELNICA: ;
+lemma=rolniczka,pos2=noun,node=concept|sit:	ZAWÓD: ;
+lemma=hutnik,pos2=noun,node=concept|sit:	ZAWÓD: ;
+lemma=syn,pos2=noun,node=concept|sit:	OSOBA: ;

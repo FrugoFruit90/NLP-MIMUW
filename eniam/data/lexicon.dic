@@ -17,7 +17,7 @@
   <adv> <ger> <pact> <ppas> <fin> <bedzie> <praet> <winien> <impt>
   <imps> <pred> <aglt> <inf> <pcon> <pant> <qub> <comp> <compar> <conj> <interj>
   <sinterj> <burk> <interp> <part> <unk> <building-number> do w na MIASTO ORGANIZACJA location time
-  CERTYFIKAT KIERUNEK_STUDIÓW link
+  CERTYFIKAT KIERUNEK_STUDIÓW ZAWÓD link
 
 @WEIGHTS
 
@@ -33,6 +33,8 @@ lemma=następnie,pos=adv:       link;
 lemma=uczęszczać,pos=praet,person=ter,mood=indicative,tense=past:     ip{|time,|prepnp*ORGANIZACJA*do*gen,|location};
 lemma=uzyskać,pos=praet,person=ter,mood=indicative,tense=past:     ip{|time,|np*CERTYFIKAT*T*acc*T};
 lemma=studiować,pos=praet,person=ter,mood=indicative,tense=past:     ip{|(1+link),|np*KIERUNEK_STUDIÓW*T*acc*T,|prepnp*ORGANIZACJA*na*loc};
+lemma=urodzony,pos=subst,person=ter:     ip{/(1+time),/location};
+lemma=syn,pos=subst,person=ter,gender=m1: ip{/(1+OSOBA)}
 
 lemma=</sentence>,pos=interp:     BRACKET s\?(ip+cp*int*T+np*sg*voc*T*T+interj);
 lemma=<sentence>,pos=interp:      BRACKET <root>/s;
@@ -107,6 +109,7 @@ pos=interp:  <interp>;
 pos=part:  <part>;
 pos=compar:  <compar>;
 pos=unk:  <unk>;
+
 pos=subst:  <subst>;
 pos=year:  <year>;
 pos=year-interval:  <year-interval>;
