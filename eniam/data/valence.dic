@@ -5,7 +5,7 @@
 @SELPREF_NAMES
 
 ZDARZENIE OSOBA KIERUNEK_STUDIÓW CERTYFIKAT CZAS UTWÓR
-META STAN OKRES TYTUŁ PRACA AUTOR NUMER, DZIELNICA, ZAWÓD
+META STAN OKRES TYTUŁ PRACA AUTOR NUMER DZIELNICA ZAWÓD LICZBA MIESIĄC PRZYMIOTNIK ORGANIZACJA DZIAŁALNOŚĆ
 
 @ROLE_NAMES
 
@@ -16,7 +16,6 @@ lemma=syn,pos2=noun,node=concept|sit:	OSOBA: ;
 lemma=uczęszczać,pos2=verb,node=concept|sit:	ZDARZENIE: ;
 lemma=studiować,pos2=verb,node=concept|sit:	ZDARZENIE: ;
 lemma=architektura,pos2=noun,node=concept|sit:	KIERUNEK_STUDIÓW: ;
-lemma=dyplom,pos2=noun,node=concept|sit:	CERTYFIKAT: ;
 lemma=uzyskać,pos2=verb,node=concept|sit:	ZDARZENIE: ;
 lemma=okres,pos2=noun,node=concept|sit:	CZAS: ;
 lemma=zacząć,pos2=verb,node=concept|sit:	STAN: ;
@@ -37,10 +36,33 @@ lemma=rolniczka,pos2=noun,node=concept|sit:	ZAWÓD: ;
 lemma=hutnik,pos2=noun,node=concept|sit:	ZAWÓD: ;
 lemma=syn,pos2=noun,node=concept|sit:	OSOBA: ;
 lemma=dyplom,pos2=noun,node=concept|sit:	CERTYFIKAT: ;
+lemma=matura,pos2=noun,node=concept|sit:	CERTYFIKAT: ;
 lemma=magisterium,pos2=noun,node=concept|sit:	CERTYFIKAT: ;
 lemma=zdać,pos2=verb,node=concept|sit:	ZDARZENIE: ;
 lemma=uczyć,pos2=verb,node=concept|sit:	ZDARZENIE: ;
 lemma=urodzić,pos2=verb,node=concept|sit:	ZDARZENIE: ;
 lemma=ekonomia,pos2=noun,node=concept|sit:	KIERUNEK_STUDIÓW: ;
-lemma=odbywać,pos2=verb,node=concept|sit:	ZDARZENIE: ;
+lemma=odbyć,pos2=verb,node=concept|sit:	ZDARZENIE: ;
 lemma=mieszkać,pos2=verb,node=concept|sit:	ZDARZENIE: ;
+lemma=dwie,pos2=noun,node=concept|sit:	LICZBA: ;
+lemma=córka,pos2=noun,node=concept|sit:	OSOBA: ;
+lemma=kwiecień,pos2=noun,node=concept|sit:	MIESIĄC: ;
+lemma=Nowa Huta,pos2=Noun,node=concept|sit:	DZIELNICA: ;
+lemma=krytyk,pos2=noun,node=concept|sit:	OSOBA: ;
+lemma=prozaiczka,pos2=noun,node=concept|sit:	OSOBA: ;
+lemma=publicystka,pos2=noun,node=concept|sit:	OSOBA: ;
+lemma=literacki,pos2=adj,node=concept|sit:	PRZYMIOTNIK: ;
+lemma=służba,pos2=noun,node=concept|sit:	CERTYFIKAT: ;
+lemma=wojskowy,pos2=adj,node=concept|sit:	PRZYMIOTNIK: ;
+lemma=galeria,pos2=noun,node=concept|sit:	ORGANIZACJA: ;
+lemma=rozdawać,pos2=verb,node=concept|sit:	ZDARZENIE: ;
+lemma=feministyczny,pos2=adj,node=concept|sit:	PRZYMIOTNIK: ;
+lemma=ruch,pos2=noun,node=concept|sit:	ORGANIZACJA: ;
+lemma=związać,pos2=verb,node=concept|sit:	ZDARZENIE: ;
+lemma=szkoła,pos2=noun,node=concept|sit:	ORGANIZACJA: ;
+lemma=podstawowy,pos2=adj,node=concept|sit:	PRZYMIOTNIK: ;
+lemma=a,pos2=adv,node=concept|sit:	META: ;
+lemma=uczestniczyć,pos2=verb,node=concept|sit:	ZDARZENIE: ;
+lemma=działalność,pos2=noun,node=concept|sit:	DZIAŁALNOŚĆ: ;
+lemma=opozycja,pos2=noun,node=concept|sit:	ORGANIZACJA: ;
+lemma=demokratyczny,pos2=adj,node=concept|sit:	PRZYMIOTNIK: ;

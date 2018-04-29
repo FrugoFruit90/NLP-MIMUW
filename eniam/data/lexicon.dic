@@ -16,8 +16,8 @@
   <match-result> <url> <email> <phone-number> <postal-code> <obj-id> <list-item> <fixed> <adj> <apron> <adjc> <adjp> <adja>
   <adv> <ger> <pact> <ppas> <fin> <bedzie> <praet> <winien> <impt>
   <imps> <pred> <aglt> <inf> <pcon> <pant> <qub> <comp> <compar> <conj> <interj>
-  <sinterj> <burk> <interp> <part> <unk> <building-number> do w na MIASTO ORGANIZACJA OSOBA location time
-  CERTYFIKAT KIERUNEK_STUDIÓW ZAWÓD link NAZWISKO IMIĘ
+  <sinterj> <burk> <interp> <part> <unk> <building-number> do w na z MIASTO ORGANIZACJA OSOBA location time
+  CERTYFIKAT KIERUNEK_STUDIÓW ZAWÓD link NAZWISKO IMIĘ LICZBA MIESIĄC DZIELNICA PRZYMIOTNIK UTWÓR DZIAŁALNOŚĆ
 
 @WEIGHTS
 
@@ -27,22 +27,39 @@ pos=year-interval:              year-interval;
 pos=year:                       year;
 lemma=w,pos=prep,case=loc:      time/(year-interval+year);
 lemma=w,pos=prep,case=loc:      location/np*MIASTO*T*case*T;
+lemma=po,pos=prep,case=loc:    time/year;
+lemma=od,pos=prep,case=gen:    time/year;
 pos=prep:                       QUANT[cat=0] prepnp*cat*lemma*case/np*cat*T*case*T;
 pos=subst:                      np*cat*number*case*gender;
-lemma=następnie,pos=adv:       link;
+pos=adj:                        adj*cat*number*case*gender;
+pos=conj:                     conj;
+lemma=następnie,pos=adv:        link;
 lemma=uczęszczać,pos=praet,person=ter,mood=indicative,tense=past:     ip{|time,|prepnp*ORGANIZACJA*do*gen,|location};
 lemma=uzyskać,pos=praet,person=ter,mood=indicative,tense=past:     ip{|time,|np*CERTYFIKAT*T*acc*T};
+lemma=zdać,pos=praet,person=ter,mood=indicative,tense=past:     ip{|time,|np*CERTYFIKAT*T*acc*T};
 lemma=studiować,pos=praet,person=ter,mood=indicative,tense=past:     QUANT[cat=w&na] ip{|(1+link),|np*KIERUNEK_STUDIÓW*T*acc*T,|prepnp*ORGANIZACJA*cat*loc};
 lemma=urodzić, pos=ppas: ip{|(1+link), |time, |prepnp*MIASTO*w*loc};
-lemma=uczyć,pos=praet,person=ter, mood=indicative, tense=past:     ip{|(1+link),|prepnp*ORGANIZACJA*w*loc};
-lemma=urodzony,pos=subst,person=ter:     ip{/(1+time),/location};
-lemma=syn,pos=subst,person=ter,gender=m1: np*OSOBA*number*case*gender/np*IMIĘ*sg*gen*T/np*NAZWISKO*sg*gen*T/np*ZAWÓD*sg*gen*T;
+lemma=uczyć,pos=praet,person=ter, mood=indicative, tense=past:     ip{|(1+location),|part,|prepnp*ORGANIZACJA*w*loc};
+lemma=urodzony,pos=subst:     ip{|prepnp*MIASTO*w*loc,|time};
+# lemma=syn,pos=subst,person=ter,gender=m1: np*OSOBA*number*case*gender/np*IMIĘ*sg*gen*T/np*NAZWISKO*sg*gen*T/np*ZAWÓD*sg*gen*T;
 pos=subst,cat=IMIĘ: np*OSOBA*number*case*gender/np*ZAWÓD*number*case*gender;
 lemma=i,pos=conj:               QUANT[case=0,cat=0] np*cat*sg*case*T\np*cat*T*case*T/np*cat*T*case*T;
-lemma=się,pos=part:	link;
-lemma=odbyć,pos=praet,person=ter,mood=indicative,tense=past:     ip{|time,|np*CERTYFIKAT*T*acc*T};
+lemma=się,pos=part:	part;
+lemma=odbyć,pos=praet,person=ter,mood=indicative,tense=past:     ip{|(1+time),|np*CERTYFIKAT*T*acc*T};
+lemma=rozdawać,pos=praet,person=ter,mood=indicative,tense=past:     ip{|np*UTWÓR*T*acc*T,|prepnp*ORGANIZACJA*w*loc};
 lemma=mieszkać,pos=fin,person=ter,mood=indicative,tense=pres: ip{|(1+link),|prepnp*MIASTO*w*loc};
+lemma=mieć,pos=fin,person=ter,mood=indicative: QUANT[case=0,gender=0,number=0] ip{/np*LICZBA*number*case*gender,/np*OSOBA*number*case*gender};
+# Dla daty dzień miesiąc rok
+pos=day: time/year/np*MIESIĄC*sg*gen*T;
+pos=subst,cat=OSOBA:  np*OSOBA*number*case*gender/adj*PRZYMIOTNIK*number*case*gender;
+pos=subst,cat=CERTYFIKAT:  np*CERTYFIKAT*number*case*gender/adj*PRZYMIOTNIK*number*case*gender;
+pos=subst,cat=ORGANIZACJA:  np*ORGANIZACJA*number*case*gender/adj*PRZYMIOTNIK*number*case*gender;
+pos=subst: np*OSOBA*T*T*T\np*OSOBA*T*T*T;
+lemma=związać,pos=praet,person=ter, mood=indicative, tense=past:     ip{|part,|time,|prepnp*ORGANIZACJA*z*inst};
+lemma=następnie,pos=adv:  ip{|ip,|conj,|time,|prepnp*ORGANIZACJA*w*loc};
+lemma=uczestniczyć,pos=praet,person=ter, mood=indicative, tense=past:     ip{|prepnp*DZIAŁALNOŚĆ*w*loc,|np*ORGANIZACJA*T*gen*T};
 
+lemma=</sentence>,pos=interp:     BRACKET s\(ip+ip*T*T*T+cp*int*T+np*T*T*T*T+interj); 
 lemma=</sentence>,pos=interp:     BRACKET s\?(ip+cp*int*T+np*sg*voc*T*T+interj);
 lemma=<sentence>,pos=interp:      BRACKET <root>/s;
 
