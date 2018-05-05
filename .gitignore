@@ -2,3 +2,6 @@
 
 eniam/*
 .idea/
+*.xml
+*.dtd
+*.html

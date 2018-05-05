@@ -1,0 +1,19 @@
+Zadanie 1 (2 pkt). 
+
+ZnajdŸ za pomoc¹ Wordnetu synonimy i hiperonimy s³ów wystêpuj¹cych w pliku dev.xml w korpusie RTE1.
+Wynik nale¿y zaprezentowaæ wypisuj¹c ka¿dy token wraz z tagiem morfosk³adniowym w osobnym wierszu a po nim wypisaæ w tym wierszu synonimy i hiperonimy.
+Nazwy w³asne (równie¿ wielos³owne) traktujemy jako pojedyncze tokeny i nie szukamy dla nich hiperonimów.
+Przez synonimy rozumiemy synsety, do których token nale¿y, a przez hiperonimy synset ogólniejsze od nich.
+Ka¿dy synset nale¿y reprezentowaæ przez kanoniczne wybrany sens.
+
+
+
+Zadanie 2 (1 pkt).
+
+Okreœl jaki procent rzeczowników, czasowników, przymiotników i przys³ówków z pliku dev.xml z korpusu RTE1 znajduje siê w Wordnecie.
+
+
+
+Zadanie 3 (2 pkt).
+
+Uruchom Stanford Parser na pliku dev.xml z korpusu RTE1 i wygeneruj drzewa rozbioru sk³adniowego.
