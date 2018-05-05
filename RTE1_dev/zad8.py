@@ -17,12 +17,12 @@ soup = BeautifulSoup(content_html, 'lxml')
 
 for node in soup.findAll('t', text=True) + soup.findAll('h', text=True):
     print(str(node.contents[0]))
-    text = nltk.word_tokenize(str(node.contents[0]))
-    tagged_text = nltk.pos_tag(text)
-    for el in nltk.ne_chunk(tagged_text, binary=True):
-        print(wn.synsets(el[0][0]))
+    text = nltk.word_tokenize(str(node.contents))
+    tagged_sentence = nltk.pos_tag(text)
+    ne_rec = nltk.ne_chunk(tagged_sentence, binary=True)
+    for i, tagged_word in enumerate(ne_rec):
+        if hasattr(tagged_word, "_label"):
+            print(tagged_word)
+        else:
+            print(tagged_word, wn.synsets(tagged_word[0]))
 
-        # if len(el) == 1:
-        #     print(el, wn.synsets(el)[0])
-        # else:
-        #     print("trololo")
