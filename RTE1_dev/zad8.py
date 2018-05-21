@@ -1,8 +1,6 @@
 from nltk.corpus import wordnet as wn
 import nltk
-import xml.etree.ElementTree as ET
 from bs4 import BeautifulSoup
-from nltk.tree import Tree
 
 with open('dev.xml', 'r') as myfile:
     content_html = myfile.read()
@@ -27,5 +25,8 @@ for node in soup.findAll('t', text=True) + soup.findAll('h', text=True):
             else:
                 raise ValueError
         else:
-            print(tagged_word, wn.synsets(tagged_word[0]))
-
+            try:
+                print(tagged_word, wn.synsets(tagged_word[0])[0].lemma_names(),
+                      wn.synsets(tagged_word[0])[0].hypernyms())
+            except IndexError:
+                print(tagged_word)
